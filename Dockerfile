@@ -1,11 +1,11 @@
 # 1. Build the application
-FROM maven:3.8.8-jdk-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
 # 2. Run the application
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 COPY --from=build target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app.jar"]
