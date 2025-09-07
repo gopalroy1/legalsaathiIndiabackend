@@ -41,7 +41,7 @@ public class AuthController {
             // Correctly configure CORS-safe cookie
             ResponseCookie tokenCookie = ResponseCookie.from("token", authResponse.token)
                     .httpOnly(true)
-                    .secure(false) // ✅ true in production
+                    .secure(true) // ✅ true in production
                     .path("/")
                     .sameSite("Lax") // ✅ CRITICAL for cross-origin
                     .maxAge(24 * 60 * 60)
