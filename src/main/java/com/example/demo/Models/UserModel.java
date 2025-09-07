@@ -16,6 +16,9 @@ public class UserModel {
     @Column(name = "user_id", unique = true, nullable = false)
     private Long userId;
 
+    @Column
+    private String name;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -176,5 +179,13 @@ public class UserModel {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

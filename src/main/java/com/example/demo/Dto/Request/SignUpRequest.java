@@ -8,4 +8,5 @@ public class SignUpRequest {
     public String state;
     public String pincode;
     public String address;
+    public String name;
 }
