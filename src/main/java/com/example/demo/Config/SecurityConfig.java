@@ -4,6 +4,7 @@ import com.example.demo.Filters.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,14 +16,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig {
+
     @Autowired
     JwtFilter jwtFilter;
 
@@ -33,31 +33,17 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow preflight
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/queries/add").permitAll()
                         .requestMatchers("/products/getall").permitAll()
                         .requestMatchers("/queries/getAll").hasRole("ADMIN")
-
-
-                        // ✅ User authenticated routes
                         .requestMatchers("/users").authenticated()
                         .requestMatchers("/users/getall").hasRole("ADMIN")
-                        //
                         .requestMatchers("/product/{id}").hasRole("ADMIN")
-
-
-                        // ✅ Orders
-                        .requestMatchers("/orders/add").authenticated()
-                        .requestMatchers("/orders/getOrder").authenticated()
-                        .requestMatchers("/orders/{id}").authenticated() // 🔥 Added new endpoint
-                        .requestMatchers("/orders/getall").hasRole("ADMIN")
-
-                        //Transactions
+                        .requestMatchers("/orders/**").authenticated()
                         .requestMatchers("/transaction/byOrder/{orderId}").authenticated()
-
-                        // ✅ Payment
                         .requestMatchers("/payment/add").authenticated()
-
                         .anyRequest().authenticated()
                 );
 
@@ -67,8 +53,11 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","https://www.legalsaathiindia.com","http://127.0.0.1:3000"));
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "https://www.legalsaathiindia.com"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -92,14 +81,5 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000","https://www.legalsaathiindia.com","http://127.0.0.1:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowCredentials(true)
-                .allowedHeaders("*");
     }
 }
