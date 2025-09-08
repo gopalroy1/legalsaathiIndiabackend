@@ -43,7 +43,7 @@ public class AuthController {
                     .httpOnly(true)
                     .secure(true) // ✅ true in production false in dev
                     .path("/")
-                    .sameSite("Lax") // ✅ CRITICAL for cross-origin .. None in production and Lax in dev
+                    .sameSite("None") // ✅ CRITICAL for cross-origin .. None in production and Lax in dev
                     .maxAge(24 * 60 * 60)
                     .build();
 
