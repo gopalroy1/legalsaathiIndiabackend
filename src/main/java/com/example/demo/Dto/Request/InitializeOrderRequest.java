@@ -5,4 +5,5 @@ import java.math.BigDecimal;
 public class InitializeOrderRequest {
     public long productId;
     public  long userId;
+    public String merchant;
 }

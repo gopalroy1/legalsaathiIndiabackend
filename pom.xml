@@ -99,6 +99,22 @@
 			<artifactId>gson</artifactId>
 			<version>2.10.1</version> <!-- Or latest stable -->
 		</dependency>
+<!--		For lambda serverless -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-core</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws.serverless</groupId>
+			<artifactId>aws-serverless-java-container-springboot3</artifactId>
+			<version>2.1.4</version> <!-- Use the latest stable version -->
+		</dependency>
+		<dependency>
+			<groupId>com.phonepe</groupId>
+			<artifactId>pg-sdk-java</artifactId>
+			<version>2.1.8</version>
+		</dependency>
 	</dependencies>
 
 

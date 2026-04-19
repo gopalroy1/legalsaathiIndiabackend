@@ -16,6 +16,7 @@ import com.example.demo.Repositary.OrderRepository;
 import com.example.demo.Repositary.ProductRepository;
 import com.example.demo.Repositary.TransactionRepository;
 import com.example.demo.Repositary.UserRepositary;
+import com.example.demo.Utils.CreateOrderPhonePe;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonObject;
@@ -47,6 +48,7 @@ public class OrderService {
     UserRepositary userRepositary;
     @Autowired
     TransactionRepository transactionRepository;
+    CreateOrderPhonePe createOrderPhonePe;
 
     public String createOrderInTable(InitializeOrderRequest initializeOrderRequest,BigDecimal amount){
 
@@ -65,8 +67,14 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         BigDecimal amount=product.getPrice();
         BigDecimal razorPayAmount = amount.multiply(BigDecimal.valueOf(100));
+        //
+        if(initializeOrderRequest.merchant=="phonepe"){
+            String token = createOrderPhonePe.initializeOrder();
+            System.out.println("the phone pe response"+token);
+        }
         String razorPayOrderId =createOrderRazorpay(razorPayAmount);
         System.out.println("Razorpay order has been created"+razorPayOrderId);
+        //
         String tableOrderId = createOrderInTable(initializeOrderRequest,amount);
         InitializeOrderResponse initializeOrderResponse= new InitializeOrderResponse();
         initializeOrderResponse.razorpayOrderId=razorPayOrderId;

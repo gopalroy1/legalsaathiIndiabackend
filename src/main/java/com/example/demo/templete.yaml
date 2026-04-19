@@ -1,0 +1,46 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Spring Boot API on AWS Lambda
+
+Resources:
+  SpringBootFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.example.demo.LambdaHandler::handleRequest
+      Runtime: java17
+      CodeUri: target/legal-saathi-lambda.jar
+      MemorySize: 1024
+      Timeout: 60
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+#PROD
+#AWSTemplateFormatVersion: '2010-09-09'
+#Transform: AWS::Serverless-2016-10-31
+#Description: Spring Boot API on AWS Lambda
+#
+#Resources:
+  SpringBootFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.example.demo.LambdaHandler::handleRequest
+      Runtime: java17
+      CodeUri: target/legal-saathi-lambda.jar
+      MemorySize: 1024
+      Timeout: 30
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  ApiUrl:
+    Description: URL of the API endpoint
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

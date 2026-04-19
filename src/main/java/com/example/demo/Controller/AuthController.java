@@ -27,7 +27,11 @@ public class AuthController {
             return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.toString());
-            AuthResponse authResponse = new AuthResponse(e.getMessage(), null, null, null, null);
+            String responseMessage = e.getMessage();
+            if(responseMessage.contains("duplicate key value violates unique constraint")) {
+                responseMessage="Duplicate email or phone";
+            }
+            AuthResponse authResponse = new AuthResponse(responseMessage, null, null, null, null);
             return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
         }
     }
